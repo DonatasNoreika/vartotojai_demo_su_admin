@@ -106,10 +106,9 @@ def admin():
 @app.route("/irasai")
 @login_required
 def records():
-    try:
-        visi_irasai = Irasas.query.filter_by(vartotojas_id=current_user.id)
-    except:
-        visi_irasai = []
+    db.create_all()
+    page = request.args.get('page', 1, type=int)
+    visi_irasai = Irasas.query.filter_by(vartotojas_id=current_user.id).order_by(Irasas.data.desc()).paginate(page=page, per_page=5)
     return render_template("irasai.html", visi_irasai=visi_irasai, datetime=datetime)
 
 @app.route("/naujas_irasas", methods=["GET", "POST"])

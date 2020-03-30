@@ -86,12 +86,6 @@ def atsijungti():
     logout_user()
     return redirect(url_for('index'))
 
-
-@app.route("/paskyra")
-@login_required
-def account():
-    return render_template('paskyra.html', title='Paskyra')
-
 # @app.route("/irasai")
 # @login_required
 # def irasai():
@@ -155,6 +149,26 @@ def balance():
         else:
             balansas -= irasas.suma
     return render_template("balansas.html", balansas=balansas)
+
+# @app.route("/paskyra")
+# @login_required
+# def account():
+#     return render_template('paskyra.html', title='Paskyra')
+
+@app.route("/paskyra", methods=['GET', 'POST'])
+@login_required
+def paskyra():
+    form = forms.PaskyrosAtnaujinimoForma()
+    if form.validate_on_submit():
+        current_user.vardas = form.vardas.data
+        current_user.el_pastas = form.el_pastas.data
+        db.session.commit()
+        flash('Tavo paskyra atnaujinta!', 'success')
+        return redirect(url_for('paskyra'))
+    elif request.method == 'GET':
+        form.vardas.data = current_user.vardas
+        form.el_pastas.data = current_user.el_pastas
+    return render_template('paskyra.html', title='Account', form=form)
 
 
 @app.route("/")

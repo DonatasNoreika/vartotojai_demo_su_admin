@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, BooleanField, StringField, PasswordField, FloatField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
+from flask_wtf.file import FileField, FileAllowed
 import app
 
 
@@ -36,6 +37,7 @@ class IrasasForm(FlaskForm):
 class PaskyrosAtnaujinimoForma(FlaskForm):
     vardas = StringField('Vardas', [DataRequired()])
     el_pastas = StringField('El. paštas', [DataRequired()])
+    nuotrauka = FileField('Atnaujinti profilio nuotrauką', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Atnaujinti')
 
     def tikrinti_varda(self, vardas):
